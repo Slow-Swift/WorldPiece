@@ -8,15 +8,19 @@ public class KeycodeManager : MonoBehaviour
     KeyCode[] keycodeChars = { KeyCode.Q, KeyCode.W, KeyCode.E, KeyCode.A, KeyCode.S, KeyCode.D };
 
     [SerializeField]
-    GameObject[] keycodeVisualizations = new GameObject[keycodeLength];
+    Sprite[] keycodeSprites = new Sprite[6];
+
+    [SerializeField]
+    SpriteRenderer[] keycodeRenderers = new SpriteRenderer[keycodeLength];
 
     public bool Loaded { get; private set; }
 
-    List<KeyCode> keycode = new List<KeyCode>();
+    List<int> keycode = new List<int>();
 
     // Start is called before the first frame update
     void Start()
     {
+        Debug.Assert(keycodeSprites.Length == keycodeChars.Length, "Number of keycode spirtes does not match the number of keycode characters");
         GenerateKeycode(keycodeLength);
     }
 
@@ -24,15 +28,25 @@ public class KeycodeManager : MonoBehaviour
     void Update()
     {
         HandleKeyPresses();
+
+        for (int i = 0; i < keycodeRenderers.Length; i++) {
+            Sprite keycodeSprite = i < keycode.Count ? keycodeSprites[keycode[i]] : null;
+            keycodeRenderers[i].sprite = keycodeSprite;
+        }
     }
 
     void HandleKeyPresses()
     {
         if (Loaded) return;
-
-        KeyCode nextKey = keycode[0];
-        if (Input.GetKeyDown(nextKey)) {
+        
+        if (keycode.Count > 0 && Input.GetKeyDown(keycodeChars[keycode[0]])) {
             keycode.RemoveAt(0);
+
+            if (keycode.Count == 0)
+            {
+                Loaded = true;
+                GenerateKeycode(keycodeLength);
+            }
         }
     }
 
@@ -40,11 +54,12 @@ public class KeycodeManager : MonoBehaviour
      */
     void GenerateKeycode(int length)
     {
+        Debug.Log("Generating keycode of length " + length);
         keycode.Clear();
 
         for (int i = 0; i < length; i++)
         {
-            keycode.Add(keycodeChars[Random.Range(0, keycodeChars.Length)]);
+            keycode.Add(Random.Range(0, keycodeChars.Length-1));
         }
     }
 }
