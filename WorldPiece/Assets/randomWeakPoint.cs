@@ -43,5 +43,11 @@ public class randomWeakPoint : MonoBehaviour
         sr.material = defaultMaterial;
         Invoke("createWeakPoint", waitTime);
     }
+
+    public bool isHighlighted(GameObject point)
+    {
+        int index = System.Array.IndexOf(points, point);
+        return index == curIndex;
+    }
 }
 
