@@ -13,6 +13,13 @@ public class KeycodeManager : MonoBehaviour
     [SerializeField]
     SpriteRenderer[] keycodeRenderers = new SpriteRenderer[keycodeLength];
 
+    [SerializeField]
+    SpriteRenderer loadedIndicator;
+
+    // These could be replaced with images / sprites
+    [SerializeField]
+    Color unloadedColor, loadedColor;
+
     public bool Loaded { get; private set; }
 
     List<int> keycode = new List<int>();
@@ -28,11 +35,20 @@ public class KeycodeManager : MonoBehaviour
     void Update()
     {
         HandleKeyPresses();
+        UpdateVisuals();
+    }
 
-        for (int i = 0; i < keycodeRenderers.Length; i++) {
+    void UpdateVisuals()
+    {
+        // Update the keycode visuals
+        for (int i = 0; i < keycodeRenderers.Length; i++)
+        {
             Sprite keycodeSprite = i < keycode.Count ? keycodeSprites[keycode[i]] : null;
             keycodeRenderers[i].sprite = keycodeSprite;
         }
+
+        // Update the loaded indicator light
+        loadedIndicator.color = Loaded ? loadedColor : unloadedColor;
     }
 
     void HandleKeyPresses()
