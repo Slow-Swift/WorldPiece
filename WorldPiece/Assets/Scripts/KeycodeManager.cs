@@ -78,4 +78,9 @@ public class KeycodeManager : MonoBehaviour
             keycode.Add(Random.Range(0, keycodeChars.Length-1));
         }
     }
+
+    public void Unload()
+    {
+        Loaded = false;
+    }
 }
