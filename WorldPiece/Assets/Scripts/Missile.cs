@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public class Missile : MonoBehaviour
 {
@@ -14,6 +14,9 @@ public class Missile : MonoBehaviour
     Vector2 startPosition;
     Vector2 targetPosition;
     float startTime;
+    float damage;
+
+    Action<float> onExplode;
 
     void Start()
     {
@@ -44,11 +47,14 @@ public class Missile : MonoBehaviour
 
     void Explode()
     {
+        onExplode(damage);
         Destroy(gameObject);
     }
 
-    public void SetTarget(Vector2 target)
+    public void InitializeMissile(Vector2 target, float damage, Action<float> explodeCallback)
     {
+        this.damage = damage;
+        onExplode = explodeCallback;
         targetPosition = target;
     }
 }

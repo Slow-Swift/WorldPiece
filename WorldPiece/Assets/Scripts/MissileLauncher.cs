@@ -19,6 +19,9 @@ public class MissileLauncher : MonoBehaviour
     [SerializeField]
     Transform missileParent;
 
+    [SerializeField]
+    EarthHealth earthHealthSystem;
+
     // Update is called once per frame
     void Update()
     {
@@ -42,9 +45,12 @@ public class MissileLauncher : MonoBehaviour
 
     void LaunchMissile(Vector2 target)
     {
+        // Should get this from the earth system later
+        float damage = 10f;
+
         Transform launchPos = target.x < 0 ? leftLaunchPos : rightLaunchPos;
         Missile missile = Instantiate(missilePrefab, launchPos.position, launchPos.rotation, missileParent);
-        missile.SetTarget(target);
+        missile.InitializeMissile(target, damage, earthHealthSystem.DealDamage);
 
         keycodeManager.Unload();
     }
