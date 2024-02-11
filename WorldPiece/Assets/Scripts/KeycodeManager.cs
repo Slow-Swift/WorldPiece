@@ -70,12 +70,16 @@ public class KeycodeManager : MonoBehaviour
      */
     void GenerateKeycode(int length)
     {
-        Debug.Log("Generating keycode of length " + length);
         keycode.Clear();
 
         for (int i = 0; i < length; i++)
         {
             keycode.Add(Random.Range(0, keycodeChars.Length-1));
         }
+    }
+
+    public void Unload()
+    {
+        Loaded = false;
     }
 }
