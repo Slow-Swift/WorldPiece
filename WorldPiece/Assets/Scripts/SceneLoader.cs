@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -23,6 +22,7 @@ public class SceneLoader : MonoBehaviour
     string nextScene;
 
     bool switchingScene = false;
+    bool sceneLoaded = true;
     float sceneSwapStartTime = -10;
 
     void Awake()
@@ -32,7 +32,19 @@ public class SceneLoader : MonoBehaviour
         {
             SceneManager.LoadScene("MainMenu", LoadSceneMode.Additive);
             currentScene = SceneManager.GetSceneByName("MainMenu");
+        } else
+        {
+            for (int i = 0; i < SceneManager.sceneCount; i++)
+            {
+                Scene s = SceneManager.GetSceneAt(i);
+                if (s != gameObject.scene)
+                {
+                    currentScene = s;
+                    break;
+                }
+            }
         }
+        DontDestroyOnLoad(this);
     }
 
     void Update()
@@ -44,11 +56,12 @@ public class SceneLoader : MonoBehaviour
             if (swapPercent >= 1)
             {
                 switchingScene = false;
+                sceneLoaded = false;
                 SceneManager.UnloadSceneAsync(currentScene);
-                SceneManager.LoadScene(nextScene, LoadSceneMode.Additive);
-                sceneSwapStartTime = Time.time;
+                SceneManager.LoadSceneAsync(nextScene, LoadSceneMode.Additive);
+                SceneManager.sceneLoaded += onSceneLoaded;
             }
-        } else
+        } else if (sceneLoaded)
         {
             float swapPercent = (Time.time - sceneSwapStartTime) / sceneSwapTime;
             sceneFader.color = Color.Lerp(sceneFaderHideColor, sceneFaderNormalColor, swapPercent);
@@ -60,5 +73,15 @@ public class SceneLoader : MonoBehaviour
         nextScene = scene;
         switchingScene = true;
         sceneSwapStartTime = Time.time;
+    }
+
+    void onSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == nextScene)
+        {
+            currentScene = scene;
+            sceneLoaded = true;
+            sceneSwapStartTime = Time.time + 0.2f;
+        }
     }
 }
