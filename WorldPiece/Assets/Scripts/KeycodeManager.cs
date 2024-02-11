@@ -11,6 +11,12 @@ public class KeycodeManager : MonoBehaviour
     Sprite[] keycodeSprites = new Sprite[6];
 
     [SerializeField]
+    AudioSource[] keycodeSounds = new AudioSource[6];
+
+    [SerializeField]
+    AudioSource keycodePassSound, keycodeFailSound;
+
+    [SerializeField]
     SpriteRenderer[] keycodeRenderers = new SpriteRenderer[keycodeLength];
 
     [SerializeField]
@@ -53,13 +59,24 @@ public class KeycodeManager : MonoBehaviour
 
     void HandleKeyPresses()
     {
+
+        foreach (KeyCode kc in keycodeChars)
+        {
+            if (Input.GetKeyDown(kc) && (Loaded || keycode.Count == 0 || kc != keycodeChars[keycode[0]]))
+            {
+                keycodeFailSound.Play();
+            }
+        }
+
         if (Loaded) return;
         
         if (keycode.Count > 0 && Input.GetKeyDown(keycodeChars[keycode[0]])) {
+            keycodeSounds[keycode[0]].Play();
             keycode.RemoveAt(0);
 
             if (keycode.Count == 0)
             {
+                keycodePassSound.PlayDelayed(0.1f);
                 Loaded = true;
                 GenerateKeycode(keycodeLength);
             }
