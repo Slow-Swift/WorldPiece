@@ -13,15 +13,21 @@ public class HealthManager : MonoBehaviour
     [SerializeField]
     Transform shipHealthbarMask, earthHealthbarMask;
 
+    [SerializeField]
+    AudioSource winSound, loseSound;
+
     public float ShipHealth { get; private set; }
     public float EarthHealth { get; private set; }
 
     public float EarthHealthPercent => EarthHealth / earthStartHealth;
 
+    public bool Playing { get; private set; }
+
     void Start()
     {
         ShipHealth = shipStartHealth;
         EarthHealth = earthStartHealth;
+        Playing = true;
     }
 
     void Update()
@@ -32,11 +38,39 @@ public class HealthManager : MonoBehaviour
 
     public void DamageShip(float damage)
     {
+        if (!Playing) return;
+
         ShipHealth -= damage;
+
+        if (ShipHealth <= 0)
+        {
+            Playing = false;
+            loseSound.Play();
+            Invoke("switchToLoseMenu", 1f);
+        }
     }
 
     public void DamageEarth(float damage)
     {
+        if (!Playing) return;
+
         EarthHealth -= damage;
+
+        if (EarthHealth <= 0)
+        {
+            Playing = false;
+            winSound.Play();
+            Invoke("switchToWinMenu", 1f);
+        }
+    }
+
+    void switchToWinMenu()
+    {
+        SceneLoader.instance.SwitchScene("WinScene");
+    }
+
+    void switchToLoseMenu()
+    {
+        SceneLoader.instance.SwitchScene("LoseScene");
     }
 }
