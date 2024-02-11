@@ -22,6 +22,12 @@ public class MissileLauncher : MonoBehaviour
     [SerializeField]
     HealthManager healthManager;
 
+    [SerializeField]
+    randomWeakPoint point;
+
+    [SerializeField]
+    int damageMultiplier;
+
     // Update is called once per frame
     void Update()
     {
@@ -45,9 +51,16 @@ public class MissileLauncher : MonoBehaviour
 
     void LaunchMissile(Vector2 target)
     {
-        // Should get this from the earth system later
-        float damage = 10f;
+        float damage = 5.0f;
 
+        if (Vector2.SqrMagnitude(target - point.getWeakPoint()) < 5)
+        {
+            float relativeDist = Vector2.SqrMagnitude(target - point.getWeakPoint());
+            relativeDist++;
+            damage = damageMultiplier * (1 / Mathf.RoundToInt(relativeDist));
+        }       
+               
+      
         Transform launchPos = target.x < 0 ? leftLaunchPos : rightLaunchPos;
         Missile missile = Instantiate(missilePrefab, launchPos.position, launchPos.rotation, missileParent);
         missile.InitializeMissile(target, damage, healthManager.DamageEarth);

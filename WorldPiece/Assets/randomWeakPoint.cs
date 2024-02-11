@@ -1,47 +1,41 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
+using UnityEditor;
 using UnityEngine;
 
 public class randomWeakPoint : MonoBehaviour
 {
-    [SerializeField] GameObject[] points;
-    
-    public float waitTime = 6.0f;
-    public float highlightTime = 3.0f;
-    public Material highlight;
-    public Material defaultMaterial;
-    private int curIndex = 0;
+    [SerializeField]
+    GameObject point;
+
+    [SerializeField]
+    float waitTime = 1.0f;
+
+    Vector3 pos = Vector3.zero; 
     private void Start()
     {
         createWeakPoint();
     }
-    
-    
+
     void createWeakPoint()
     {
-        int weakpoint = Random.Range(0, points.Length);
-        curIndex = weakpoint;
-        highlightPoint(points[weakpoint]);
         
+        Invoke("resetPos", waitTime);
     }
 
-    void highlightPoint(GameObject point)
+    void resetPos()
     {
-        SpriteRenderer sr = point.GetComponent<SpriteRenderer>();
-        sr.material = highlight;
-        Invoke("unHighlightPoint", highlightTime);
-        
-        
+
+        pos = Random.insideUnitCircle * 3;
+        point.transform.position = pos;
+        Invoke("resetPos", waitTime);
+
     }
 
-  
-    void unHighlightPoint()
+    public Vector2 getWeakPoint()
     {
-       
-        SpriteRenderer sr = points[curIndex].GetComponent<SpriteRenderer>();
-        sr.material = defaultMaterial;
-        Invoke("createWeakPoint", waitTime);
+        return point.transform.position;
     }
 }
 
