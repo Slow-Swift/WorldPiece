@@ -509,6 +509,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+  - component: {fileID: 284488892}
 --- !u!1 &339705449
 GameObject:
   m_ObjectHideFlags: 0
