@@ -30,19 +30,16 @@ public class RetaliationManager : MonoBehaviour
     float targetYMin, targetYMax;
 
     float lastLaunchTime = 0;
-    float launchBreak = 0;
     
     void Update()
     {
         float healthPercent = healthManager.EarthHealthPercent;
         float launchRate = launchRateCurve.Evaluate(healthPercent);
 
-        if (launchRate <= 0) return;
-
-        if (Time.time >= lastLaunchTime + launchBreak)
+        if (healthPercent >= 0.98f) return;
+        if (Time.time >= lastLaunchTime + launchRate)
         {
             LaunchMissile();
-            launchBreak = Random.Range(0.8f / launchRate, 1.5f / launchRate);
             lastLaunchTime = Time.time;
         }
     }
