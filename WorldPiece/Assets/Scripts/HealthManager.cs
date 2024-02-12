@@ -16,6 +16,9 @@ public class HealthManager : MonoBehaviour
     [SerializeField]
     AudioSource winSound, loseSound;
 
+    [SerializeField]
+    ShieldManager shieldManager;
+
     public float ShipHealth { get; private set; }
     public float EarthHealth { get; private set; }
 
@@ -39,6 +42,7 @@ public class HealthManager : MonoBehaviour
     public void DamageShip(float damage)
     {
         if (!Playing) return;
+        if (shieldManager.ShieldActive) return;
 
         ShipHealth -= damage;
 

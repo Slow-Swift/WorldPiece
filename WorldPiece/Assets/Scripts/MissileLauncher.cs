@@ -34,6 +34,9 @@ public class MissileLauncher : MonoBehaviour
     [SerializeField]
     float maxSqrDistance;
 
+    [SerializeField]
+    ShieldManager shieldManager;
+
     // Update is called once per frame
     void Update()
     {
