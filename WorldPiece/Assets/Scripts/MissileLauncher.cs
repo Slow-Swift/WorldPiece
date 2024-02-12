@@ -26,7 +26,13 @@ public class MissileLauncher : MonoBehaviour
     randomWeakPoint point;
 
     [SerializeField]
-    int damageMultiplier;
+    float weakpointDamage;
+
+    [SerializeField]
+    float baseDamage;
+
+    [SerializeField]
+    float maxSqrDistance;
 
     // Update is called once per frame
     void Update()
@@ -51,15 +57,9 @@ public class MissileLauncher : MonoBehaviour
 
     void LaunchMissile(Vector2 target)
     {
-        float damage = 5.0f;
-
-        if (Vector2.SqrMagnitude(target - point.getWeakPoint()) < 5)
-        {
-            float relativeDist = Vector2.SqrMagnitude(target - point.getWeakPoint());
-            relativeDist++;
-            damage = damageMultiplier * (1 / Mathf.RoundToInt(relativeDist));
-        }
-
+        float distance = Vector2.SqrMagnitude(target - point.getWeakPoint());
+        float damage = Mathf.Max(weakpointDamage * (1 - distance / maxSqrDistance), baseDamage);
+        print(damage);
 
         Transform launchPos = target.x < 0 ? leftLaunchPos : rightLaunchPos;
         Missile missile = Instantiate(missilePrefab, launchPos.position, launchPos.rotation, missileParent);
