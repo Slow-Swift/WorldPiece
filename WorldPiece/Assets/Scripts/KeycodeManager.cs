@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class KeycodeManager : MonoBehaviour
 {
@@ -24,7 +25,7 @@ public class KeycodeManager : MonoBehaviour
 
     // These could be replaced with images / sprites
     [SerializeField]
-    Color unloadedColor, loadedColor;
+    Sprite unloadedImage, loadedImage;
 
     public bool Loaded { get; private set; }
 
@@ -54,7 +55,7 @@ public class KeycodeManager : MonoBehaviour
         }
 
         // Update the loaded indicator light
-        loadedIndicator.color = Loaded ? loadedColor : unloadedColor;
+        loadedIndicator.sprite = Loaded ? loadedImage : unloadedImage;
     }
 
     void HandleKeyPresses()
