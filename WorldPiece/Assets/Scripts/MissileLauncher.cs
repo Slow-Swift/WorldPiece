@@ -37,6 +37,9 @@ public class MissileLauncher : MonoBehaviour
     [SerializeField]
     ShieldManager shieldManager;
 
+    [SerializeField]
+    AudioSource shootSource;
+
     // Update is called once per frame
     void Update()
     {
@@ -60,6 +63,7 @@ public class MissileLauncher : MonoBehaviour
 
     void LaunchMissile(Vector2 target)
     {
+        shootSource.Play();
         float distance = Vector2.SqrMagnitude(target - point.getWeakPoint());
         float damage = Mathf.Max(weakpointDamage * (1 - distance / maxSqrDistance), baseDamage);
         print(damage);

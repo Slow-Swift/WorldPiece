@@ -29,6 +29,9 @@ public class RetaliationManager : MonoBehaviour
     [SerializeField]
     float targetYMin, targetYMax;
 
+    [SerializeField]
+    AudioSource warningSound;
+
     float lastLaunchTime = 0;
     
     void Update()
@@ -46,6 +49,8 @@ public class RetaliationManager : MonoBehaviour
 
     void LaunchMissile()
     {
+        warningSound.Play();
+        Invoke("stopSound", 2);
         Debug.Log("Firing Missile");
         float angle = Random.Range(0, Mathf.PI);
         float distance = Random.Range(0, earthRadius);
@@ -60,5 +65,10 @@ public class RetaliationManager : MonoBehaviour
 
         Missile missile = Instantiate(missilePrefab, launchPos, Quaternion.identity, missileParent);
         missile.InitializeMissile(new Vector2(targetX, targetY), damage, healthManager.DamageShip);
+    }
+
+    void stopSound()
+    {
+        warningSound.Stop();
     }
 }
